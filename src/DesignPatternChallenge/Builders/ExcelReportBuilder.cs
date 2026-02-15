@@ -2,15 +2,16 @@ using DesignPatternChallenge.Models;
 
 namespace DesignPatternChallenge.Builders;
 
-public class PdfReportBuilder : IReportBuilder
+public class ExcelReportBuilder : IReportBuilder
 {
     private readonly Report _report = new();
 
-    public PdfReportBuilder()
+    public ExcelReportBuilder()
     {
-        _report.Format = "PDF";
+        _report.Format = "Excel";
+        _report.Orientation = "Landscape";
     }
-    
+
     public IReportBuilder SetTitle(string title)
     {
         _report.Title = title;
@@ -119,6 +120,8 @@ public class PdfReportBuilder : IReportBuilder
         if (_report.EndDate <= _report.StartDate)
             throw new InvalidOperationException("Período inválido.");
 
-        return _report;
+        return _report.Columns.Count == 0
+            ? throw new InvalidOperationException("Excel precisa de pelo menos uma coluna.")
+            : _report;
     }
 }
